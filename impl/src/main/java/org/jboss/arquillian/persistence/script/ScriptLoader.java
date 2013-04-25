@@ -81,4 +81,12 @@ public final class ScriptLoader
       return script.endsWith(".sql");
    }
 
+   public static boolean isChangelogFile(String script)
+   {
+      if (script == null)
+      {
+         return false;
+      }
+      return script.endsWith(".xml");
+   }
 }

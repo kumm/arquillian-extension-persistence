@@ -32,6 +32,7 @@ import org.jboss.arquillian.persistence.core.event.BeforePersistenceTest;
 import org.jboss.arquillian.persistence.core.util.Strings;
 import org.jboss.arquillian.persistence.script.ScriptLoader;
 import org.jboss.arquillian.persistence.script.configuration.ScriptingConfiguration;
+import org.jboss.arquillian.persistence.script.data.descriptor.FileChangelogResourceDescriptor;
 import org.jboss.arquillian.persistence.script.data.descriptor.FileSqlScriptResourceDescriptor;
 import org.jboss.arquillian.persistence.script.data.descriptor.InlineSqlScriptResourceDescriptor;
 import org.jboss.arquillian.persistence.script.data.descriptor.SqlScriptResourceDescriptor;
@@ -93,6 +94,9 @@ public class CustomScriptsExecutor
          if (ScriptLoader.isSqlScriptFile(script))
          {
             processedScripts.add(new FileSqlScriptResourceDescriptor(script));
+         }
+         else if (ScriptLoader.isChangelogFile(script)) {
+            processedScripts.add(new FileChangelogResourceDescriptor(script));
          }
          else if (!Strings.isEmpty(script))
          {

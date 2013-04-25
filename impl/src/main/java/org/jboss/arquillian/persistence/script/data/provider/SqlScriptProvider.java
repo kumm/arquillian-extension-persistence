@@ -31,7 +31,9 @@ import org.jboss.arquillian.persistence.core.data.naming.FileNamingStrategy;
 import org.jboss.arquillian.persistence.core.data.provider.ResourceProvider;
 import org.jboss.arquillian.persistence.core.metadata.MetadataExtractor;
 import org.jboss.arquillian.persistence.core.metadata.ValueExtractor;
+import org.jboss.arquillian.persistence.script.ScriptLoader;
 import org.jboss.arquillian.persistence.script.configuration.ScriptingConfiguration;
+import org.jboss.arquillian.persistence.script.data.descriptor.FileChangelogResourceDescriptor;
 import org.jboss.arquillian.persistence.script.data.descriptor.FileSqlScriptResourceDescriptor;
 import org.jboss.arquillian.persistence.script.data.descriptor.SqlScriptResourceDescriptor;
 import org.jboss.arquillian.persistence.script.data.naming.PrefixedScriptFileNamingStrategy;
@@ -161,9 +163,20 @@ public class SqlScriptProvider<T extends Annotation> extends ResourceProvider<Sq
    }
 
    @Override
-   protected FileSqlScriptResourceDescriptor createDescriptor(String dataFileName)
+   protected SqlScriptResourceDescriptor createDescriptor(String dataFileName)
    {
-      return new FileSqlScriptResourceDescriptor(determineLocation(dataFileName));
+      if (ScriptLoader.isSqlScriptFile(dataFileName))
+      {
+         return new FileSqlScriptResourceDescriptor(determineLocation(dataFileName));
+      } 
+      else if (ScriptLoader.isChangelogFile(dataFileName))
+      {
+         return new FileChangelogResourceDescriptor(determineLocation(dataFileName));
+      } 
+      else
+      {
+         return null;
+      }
    }
 
    @Override

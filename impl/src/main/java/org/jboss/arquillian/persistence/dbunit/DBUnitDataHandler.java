@@ -45,8 +45,10 @@ import org.jboss.arquillian.persistence.dbunit.configuration.DBUnitDataSeedStrat
 import org.jboss.arquillian.persistence.dbunit.dataset.DataSetRegister;
 import org.jboss.arquillian.persistence.dbunit.exception.DBUnitConnectionException;
 import org.jboss.arquillian.persistence.dbunit.exception.DBUnitDataSetHandlingException;
+import org.jboss.arquillian.persistence.script.ChangelogExecutor;
 import org.jboss.arquillian.persistence.script.ScriptExecutor;
 import org.jboss.arquillian.persistence.script.configuration.ScriptingConfiguration;
+import org.jboss.arquillian.persistence.script.data.descriptor.FileChangelogResourceDescriptor;
 import org.jboss.arquillian.persistence.script.data.descriptor.SqlScriptResourceDescriptor;
 
 /**
@@ -119,8 +121,7 @@ public class DBUnitDataHandler implements DataHandler
    {
       for (SqlScriptResourceDescriptor scriptDescriptor : cleanupDataUsingScriptEvent.getDescriptors())
       {
-         final String script = scriptDescriptor.getContent();
-         executeScript(script);
+         execute(scriptDescriptor);
       }
    }
 
@@ -128,12 +129,22 @@ public class DBUnitDataHandler implements DataHandler
    {
       for (SqlScriptResourceDescriptor scriptDescriptor : executeScriptsEvent.getDescriptors())
       {
-         final String script = scriptDescriptor.getContent();
-         executeScript(script);
+         execute(scriptDescriptor);
       }
    }
 
    // -- Private methods
+   private void execute(SqlScriptResourceDescriptor scriptDescriptor)
+   {
+      if (scriptDescriptor instanceof FileChangelogResourceDescriptor)
+      {
+         executeChangeset(scriptDescriptor.getLocation());
+      } else
+      {
+         final String script = scriptDescriptor.getContent();
+         executeScript(script);
+      }
+   }
 
    private void executeScript(String script)
    {
@@ -142,6 +153,19 @@ public class DBUnitDataHandler implements DataHandler
          final ScriptExecutor scriptExecutor = new ScriptExecutor(databaseConnection.get().getConnection());
          scriptExecutor.setStatementDelimiter(scriptConfigurationInstance.get().getSqlStatementDelimiter());
          scriptExecutor.execute(script);
+      }
+      catch (SQLException e)
+      {
+         throw new DBUnitConnectionException("Unable to obtain JDBC connection", e);
+      }
+   }
+
+   private void executeChangeset(String location)
+   {
+      try
+      {
+         final ChangelogExecutor changelogExecutor = new ChangelogExecutor(databaseConnection.get().getConnection());
+         changelogExecutor.execute(location);
       }
       catch (SQLException e)
       {
@@ -173,5 +197,4 @@ public class DBUnitDataHandler implements DataHandler
             databaseConnection.get(), dataSetRegister.get()));
       cleanupStrategyExecutor.cleanupDatabase(dbunitConfigurationInstance.get().getExcludeTablesFromCleanup());
    }
-
 }

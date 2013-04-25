@@ -177,7 +177,7 @@ public class PersistenceExtensionConfigurationTestArchiveEnricher implements App
 
       for (String script : scripts)
       {
-         if (ScriptLoader.isSqlScriptFile(script))
+         if (ScriptLoader.isSqlScriptFile(script) || ScriptLoader.isChangelogFile(script))
          {
             sqlScriptsArchive.merge(createArchiveWithResources(script));
          }

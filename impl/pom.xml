@@ -25,6 +25,7 @@
     <version.jta>1.1</version.jta>
     <version.slf4j>1.7.2</version.slf4j>
     <version.junit_params>0.4.0</version.junit_params>
+    <version.liquibase>2.0.5</version.liquibase>
   </properties>
 
   <dependencies>
@@ -140,6 +141,12 @@
     <dependency>
         <groupId>org.jboss.shrinkwrap.descriptors</groupId>
         <artifactId>shrinkwrap-descriptors-api-base</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>org.liquibase</groupId>
+        <artifactId>liquibase-core</artifactId>
+        <version>${version.liquibase}</version>
     </dependency>
 
     <!-- Test dependencies -->
