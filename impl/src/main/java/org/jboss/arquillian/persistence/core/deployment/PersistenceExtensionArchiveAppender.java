@@ -61,6 +61,9 @@ public class PersistenceExtensionArchiveAppender implements AuxiliaryArchiveAppe
                                                                       Filters.exclude(PersistenceExtension.class.getPackage()),
                                                                       "org.jboss.arquillian.persistence")
                                                                 .addPackages(true, requiredLibraries())
+                                                                 //TODO: find a better way to include all xsd from liquibase
+                                                                .addAsResource("liquibase/parser/core/xml/dbchangelog-2.0.xsd")
+                                                                .addAsResource("liquibase/parser/core/xml/dbchangelog-2.1.xsd")
                                                                 .addAsServiceProvider(RemoteLoadableExtension.class, RemotePersistenceExtension.class);
       return persistenceExtensionArchive;
    }
@@ -71,6 +74,7 @@ public class PersistenceExtensionArchiveAppender implements AuxiliaryArchiveAppe
    {
       List<String> libraries = new ArrayList<String>(Arrays.asList(
             "org.dbunit",
+            "liquibase",
             "org.apache.commons",
             "org.apache.log4j",
             "org.slf4j",
