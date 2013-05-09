@@ -8,9 +8,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import liquibase.Liquibase;
 import liquibase.database.Database;
+import liquibase.database.DatabaseConnection;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.DatabaseException;
@@ -35,6 +40,7 @@ public class ChangelogExecutor
    public void execute(String changelogFile)
    {
       Database database;
+      Liquibase liquibase;
       try
       {
          database = createDatabase(connection);
@@ -43,7 +49,6 @@ public class ChangelogExecutor
       {
          throw new RuntimeException("Can't use database!", ex);
       }
-      Liquibase liquibase;
       try
       {
          liquibase = new Liquibase(changelogFile, new ChangelogResourceAccessor(), database);
@@ -64,7 +69,59 @@ public class ChangelogExecutor
 
    private Database createDatabase(Connection connection) throws DatabaseException
    {
-      return DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
+      DatabaseConnection liquibaseConnection = new NoTransactionControlJdbcConnection(connection);
+      return DatabaseFactory.getInstance().findCorrectDatabaseImplementation(liquibaseConnection);
+   }
+
+   private static class NoTransactionControlJdbcConnection extends JdbcConnection
+   {
+
+      public NoTransactionControlJdbcConnection(Connection connection)
+      {
+         super(connection);
+      }
+
+      @Override
+      public void commit() throws DatabaseException
+      {
+      }
+
+      @Override
+      public void releaseSavepoint(Savepoint savepoint) throws DatabaseException
+      {
+      }
+
+      @Override
+      public void rollback() throws DatabaseException
+      {
+      }
+
+      @Override
+      public void rollback(Savepoint savepoint) throws DatabaseException
+      {
+      }
+
+      @Override
+      public Savepoint setSavepoint() throws DatabaseException
+      {
+         return null;
+      }
+
+      @Override
+      public Savepoint setSavepoint(String name) throws DatabaseException
+      {
+         return null;
+      }
+
+      @Override
+      public void setTransactionIsolation(int level) throws DatabaseException
+      {
+      }
+
+      @Override
+      public void setAutoCommit(boolean autoCommit) throws DatabaseException
+      {
+      }
    }
 
    private static class ChangelogResourceAccessor implements ResourceAccessor
