@@ -63,7 +63,8 @@ public class PersistenceExtensionArchiveAppender implements AuxiliaryArchiveAppe
                                                                 .addPackages(true, requiredLibraries())
                                                                  //TODO: find a better way to include all xsd from liquibase
                                                                 .addAsResource("liquibase/parser/core/xml/dbchangelog-2.0.xsd")
-                                                                .addAsResource("liquibase/parser/core/xml/dbchangelog-2.1.xsd")
+                                                                .addAsResource("liquibase/parser/core/xml/dbchangelog-3.0.xsd")
+                                                                .addAsResource("liquibase/parser/core/xml/dbchangelog-3.1.xsd")
                                                                 .addAsServiceProvider(RemoteLoadableExtension.class, RemotePersistenceExtension.class);
       return persistenceExtensionArchive;
    }

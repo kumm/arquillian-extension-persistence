@@ -13,6 +13,7 @@ import java.sql.Savepoint;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import liquibase.Contexts;
 import liquibase.Liquibase;
 import liquibase.database.Database;
 import liquibase.database.DatabaseConnection;
@@ -59,7 +60,7 @@ public class ChangelogExecutor
       }
       try
       {
-         liquibase.update(null);
+         liquibase.update(new Contexts());
       }
       catch (LiquibaseException ex)
       {
