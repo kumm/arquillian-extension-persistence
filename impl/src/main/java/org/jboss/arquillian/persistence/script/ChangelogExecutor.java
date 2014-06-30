@@ -21,6 +21,7 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.LiquibaseException;
+import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.resource.ResourceAccessor;
 import org.jboss.arquillian.persistence.dbunit.exception.DBUnitDataSetHandlingException;
 
@@ -52,7 +53,7 @@ public class ChangelogExecutor
       }
       try
       {
-         liquibase = new Liquibase(changelogFile, new ChangelogResourceAccessor(), database);
+         liquibase = new Liquibase(changelogFile, new ClassLoaderResourceAccessor(), database);
       }
       catch (LiquibaseException ex)
       {
@@ -125,25 +126,4 @@ public class ChangelogExecutor
       }
    }
 
-   private static class ChangelogResourceAccessor implements ResourceAccessor
-   {
-
-      @Override
-      public InputStream getResourceAsStream(String file) throws IOException
-      {
-         return Thread.currentThread().getContextClassLoader().getResourceAsStream(file);
-      }
-
-      @Override
-      public Enumeration<URL> getResources(final String packageName) throws IOException
-      {
-         return null;
-      }
-
-      @Override
-      public ClassLoader toClassLoader()
-      {
-         return Thread.currentThread().getContextClassLoader();
-      }
-   }
 }
