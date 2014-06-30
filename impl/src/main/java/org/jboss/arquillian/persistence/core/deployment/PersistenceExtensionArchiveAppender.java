@@ -65,6 +65,7 @@ public class PersistenceExtensionArchiveAppender implements AuxiliaryArchiveAppe
                                                                 .addAsResource("liquibase/parser/core/xml/dbchangelog-2.0.xsd")
                                                                 .addAsResource("liquibase/parser/core/xml/dbchangelog-3.0.xsd")
                                                                 .addAsResource("liquibase/parser/core/xml/dbchangelog-3.1.xsd")
+                                                                .addAsResource("liquibase/parser/core/xml/dbchangelog-3.2.xsd")
                                                                 .addAsServiceProvider(RemoteLoadableExtension.class, RemotePersistenceExtension.class);
       return persistenceExtensionArchive;
    }
