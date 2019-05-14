@@ -15,7 +15,7 @@
   <!-- Artifact Configuration -->
   <groupId>org.jboss.arquillian.extension</groupId>
   <artifactId>arquillian-persistence-parent</artifactId>
-  <version>1.0.0.Final-SNAPSHOT</version>
+  <version>1.0.0.Final-wcs5</version>
   <packaging>pom</packaging>
 
   <name>Arquillian Persistence Extension Aggregator</name>
@@ -55,6 +55,17 @@
     <system>jira</system>
     <url>https://issues.jboss.org/browse/ARQ/component/12314864</url>
   </issueManagement>
+  
+    <distributionManagement>
+        <repository>
+            <id>nexus.wcs.local</id>
+            <url>http://nexus.wcs.local:8081/nexus/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus.wcs.local</id>
+            <url>http://nexus.wcs.local:8081/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 
   <!-- Properties -->
   <properties>
